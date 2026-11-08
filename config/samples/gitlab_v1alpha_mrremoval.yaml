@@ -1,0 +1,9 @@
+apiVersion: gitlab.dmpe.github.io/v1alpha
+kind: MRRemoval
+metadata:
+  labels:
+    app.kubernetes.io/name: gitlab-remove-mr-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: mrremoval-sample
+spec:
+  # TODO(user): Add fields here
