@@ -18,7 +18,10 @@ package controller
 
 import (
 	"context"
+	"fmt"
 
+	corev1 "k8s.io/api/core/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -36,6 +39,7 @@ type MRRemovalReconciler struct {
 // +kubebuilder:rbac:groups=gitlab.dmpe.github.io,resources=mrremovals,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=gitlab.dmpe.github.io,resources=mrremovals/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=gitlab.dmpe.github.io,resources=mrremovals/finalizers,verbs=update
+// +kubebuilder:rbac:groups="",resources=namespaces,verbs=get;list;watch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -50,8 +54,47 @@ func (r *MRRemovalReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	_ = logf.FromContext(ctx)
 
 	// iterate over each namespace and attempt to remove it
+	all_namespaces := &corev1.NamespaceList{}
+	err := r.List(ctx, all_namespaces)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	for key, ns := range all_namespaces.Items {
+		fmt.Println("Namespace: ", key, " ->", ns.Name)
+		fmt.Println("Will now attempt to remove it")
+		err := r.removeNamespace(ctx, ns.Name)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
 
 	return ctrl.Result{}, nil
+}
+
+func (r *MRRemovalReconciler) removeNamespace(ctx context.Context, namespace string) error {
+	log := logf.FromContext(ctx)
+	ns := &corev1.Namespace{}
+	err := r.Get(ctx, client.ObjectKey{Name: namespace}, ns)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			log.Info("Namespace already deleted", "namespace", namespace)
+			return nil
+		}
+		return fmt.Errorf("failed to get namespace %s: %w", namespace, err)
+	}
+
+	err = r.Delete(ctx, ns)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			return nil
+		}
+
+		return fmt.Errorf("failed to delete namespace %s: %w", namespace, err)
+	}
+
+	log.Info("Namespace deletion initiated", "namespace", namespace)
+	return nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

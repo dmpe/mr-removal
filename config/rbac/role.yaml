@@ -5,6 +5,15 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - delete
+  - get
+  - list
+  - watch
+- apiGroups:
   - gitlab.dmpe.github.io
   resources:
   - mrremovals
