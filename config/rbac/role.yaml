@@ -1,11 +1,32 @@
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  labels:
-    app.kubernetes.io/name: gitlab-remove-mr-operator
-    app.kubernetes.io/managed-by: kustomize
   name: manager-role
 rules:
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - gitlab.dmpe.github.io
+  resources:
+  - mrremovals
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - gitlab.dmpe.github.io
+  resources:
+  - mrremovals/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - gitlab.dmpe.github.io
+  resources:
+  - mrremovals/status
+  verbs:
+  - get
+  - patch
+  - update

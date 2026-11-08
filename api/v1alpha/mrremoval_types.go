@@ -21,9 +21,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // MRRemovalSpec defines the desired state of MRRemoval
 type MRRemovalSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
@@ -33,7 +30,7 @@ type MRRemovalSpec struct {
 
 	// foo is an example field of MRRemoval. Edit mrremoval_types.go to remove/update
 	// +optional
-	Foo *string `json:"foo,omitempty"`
+	NSPrefix *string `json:"nsprefix,omitempty"`
 }
 
 // MRRemovalStatus defines the observed state of MRRemoval.

@@ -49,7 +49,7 @@ type MRRemovalReconciler struct {
 func (r *MRRemovalReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = logf.FromContext(ctx)
 
-	// TODO(user): your logic here
+	// iterate over each namespace and attempt to remove it
 
 	return ctrl.Result{}, nil
 }
