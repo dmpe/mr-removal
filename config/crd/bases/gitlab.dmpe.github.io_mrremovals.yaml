@@ -39,7 +39,11 @@ spec:
           spec:
             description: spec defines the desired state of MRRemoval
             properties:
-              nsprefix:
+              gitlabprojectid:
+                type: integer
+              gitlabtoken:
+                type: string
+              gitlaburl:
                 description: foo is an example field of MRRemoval. Edit mrremoval_types.go
                   to remove/update
                 type: string

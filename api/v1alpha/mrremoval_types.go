@@ -30,7 +30,9 @@ type MRRemovalSpec struct {
 
 	// foo is an example field of MRRemoval. Edit mrremoval_types.go to remove/update
 	// +optional
-	NSPrefix *string `json:"nsprefix,omitempty"`
+	GitLabURL   string `json:"gitlaburl,omitempty"`
+	GitLabToken string `json:"gitlabtoken,omitempty"`
+	GitLabProjectID int `json:"gitlabprojectid,omitempty"`
 }
 
 // MRRemovalStatus defines the observed state of MRRemoval.
